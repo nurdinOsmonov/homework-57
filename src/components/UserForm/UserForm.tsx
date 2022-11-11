@@ -28,14 +28,46 @@ const UserForm = () => {
     console.log(user);
   }
 
+  const onTextFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const {name, value} = e.target;
+    setUser(prev => ({...prev, [name]: value}));
+  }
+
+  const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, checked} = e.target;
+    setUser(prev => ({...prev, [name]: checked}));
+  }
+
   return (
     <form onSubmit={onFormSubmit}>
-      <p><input name="name" placeholder="Name"/></p>
-      <p><input name="email" placeholder="Email"/></p>
-      <p><label><input type="checkbox" name="active"/> Active</label></p>
+      <p><input
+        name="name"
+        placeholder="Name"
+        value={user.name}
+        onChange={onTextFieldChange}
+      /></p>
+      <p><input
+        name="email"
+        type="email"
+        placeholder="Email"
+        value={user.email}
+        onChange={onTextFieldChange}
+      /></p>
+      <p><label><input
+        type="checkbox"
+        name="active"
+        checked={user.active}
+        onChange={onCheckboxChange}
+      />
+        Active</label></p>
       <p>
         <label>
-          <select name="role">
+          <select
+            name="role"
+            value={user.role}
+            onChange={onTextFieldChange}
+          >
+            <option disabled value=''>Select role</option>
             <option>user</option>
             <option>editor</option>
             <option>admin</option>
