@@ -1,21 +1,12 @@
 import React, {useState} from 'react';
+import './Form.css';
+import {User, UserMutation} from "../../types";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  active: boolean;
-  role: string;
+interface Props {
+  onSubmit: (user: User) => void;
 }
 
-interface UserMutation {
-  name: string;
-  email: string;
-  active: boolean;
-  role: string;
-}
-
-const UserForm = () => {
+const UserForm: React.FC<Props> = ({onSubmit}) => {
   const [user, setUser] = useState<UserMutation>({
     name: '',
     email: '',
@@ -25,56 +16,79 @@ const UserForm = () => {
 
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(user);
-  }
+    onSubmit({
+      id: Math.random().toString(),
+      ...user
+    })
+  };
 
   const onTextFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const {name, value} = e.target;
     setUser(prev => ({...prev, [name]: value}));
-  }
+  };
 
   const onCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, checked} = e.target;
     setUser(prev => ({...prev, [name]: checked}));
-  }
+  };
 
   return (
-    <form onSubmit={onFormSubmit}>
-      <p><input
-        name="name"
-        placeholder="Name"
-        value={user.name}
-        onChange={onTextFieldChange}
-      /></p>
-      <p><input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={user.email}
-        onChange={onTextFieldChange}
-      /></p>
+    <form onSubmit={onFormSubmit} className="Form">
+      <h4>Add new User</h4>
+
+      <div className="form-group">
+        <p><label htmlFor="name"><input
+          name="name"
+          type="text"
+          className="form-control"
+          required
+          placeholder="Name"
+          value={user.name}
+          onChange={onTextFieldChange}
+        /></label></p>
+      </div>
+
+      <div className="form-group">
+        <p><label htmlFor="email"><input
+          name="email"
+          className="form-control"
+          required
+          type="email"
+          placeholder="Email"
+          value={user.email}
+          onChange={onTextFieldChange}
+        /></label></p>
+      </div>
+
+      <div className="form-group">
       <p><label><input
         type="checkbox"
         name="active"
         checked={user.active}
         onChange={onCheckboxChange}
-      />
-        Active</label></p>
+      /> Active</label></p>
+      </div>
+
+      <div className="form-group mb-2">
       <p>
         <label>
           <select
             name="role"
+            required
             value={user.role}
             onChange={onTextFieldChange}
           >
-            <option disabled value=''>Select role</option>
+            <option disabled value="">Select role</option>
             <option>user</option>
             <option>editor</option>
             <option>admin</option>
           </select>
         </label>
       </p>
+      </div>
+
       <button type="submit">Create User</button>
+
     </form>
   );
 };
